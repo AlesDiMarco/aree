@@ -1,40 +1,40 @@
-import { calcolaAreaQuadrato, calcolaAreaRettangolo } from './figure.js';
-import * as readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
+// area.js
+// Programma principale per il calcolo dell aree
 
-const rl = readline.createInterface({ input, output });
+let figura = require("./figure.js");
 
-async function main() {
-  let scelta;
+// Leggi gli argomenti dalla riga di comando
+let args = process.argv.slice(2);
 
-  do {
-    const risposta = await rl.question("Inserisci il tipo di figura, seleziona 1 per il quadrato, 2 per il rettangolo e 3 per il cerchio ");
-    scelta = parseInt(risposta.trim(), 10);
-  } while ((scelta !== 1) && (scelta !== 2) && (scelta !== 3));
-
-  if (scelta === 1) {
-    const rispostaLato = await rl.question("Inserisci il lato: ");
-    const lato = parseFloat(rispostaLato.trim());
-
-    console.log("L'area è: " + calcolaAreaQuadrato(lato));
-  }
-  else if (scelta === 2) {
-    const rispostaBase = await rl.question("Inserisci la base: ");
-    const base = parseFloat(rispostaBase.trim());
-
-    const rispostaAltezza = await rl.question("Inserisci l'altezza: ");
-    const altezza = parseFloat(rispostaAltezza.trim());
-
-    console.log("L'area è: " + calcolaAreaRettangolo(base, altezza));
-  }
-  else if (scelta === 3) {
-    const rispostaRaggio = await rl.question("Inserisci il raggio: ");
-    const raggio = parseFloat(rispostaRaggio.trim());
-
-    console.log("L'area è: " + calcolaAreaCerchio(raggio));
-  }
-
-  rl.close();
+// Controlla che ci siano esattamente 3 argomenti
+if ((args.length > 3) || (args.length < 2)) {
+  console.log("Uso: node area.js <forma> <misura1> <misura2> (se necessario)");
+  console.log("Esempio: node area.js rettangolo 34 2");
+  process.exit(1);
 }
 
-main();
+let forma = args[0];
+let risultato;
+
+if (((forma === "quadrato") || (forma === "cerchio")) && (args.length === 2)) {
+  if (forma === "quadrato") {
+    let lato = args[1];
+    console.log("L'area del quadrato è " + figura.calcolaAreaQuadrato(lato));
+  }
+
+  else {
+    let raggio = args[1];
+    console.log("L'area del cerchio è " + figura.calcolaAreaCerchio(raggio));
+  }
+}
+
+else if ((forma === "rettangolo") && (args.length === 3)) {
+  let base = args[1];
+  let altezza = args[2];
+  console.log("L'area del rettangolo è " + figura.calcolaAreaRettangolo(base, altezza));
+}
+
+else {
+  console.log("Forma '" + forma + "' non riconosciuta.");
+  process.exit(1);
+}
